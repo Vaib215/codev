@@ -15,14 +15,13 @@ export default function ThemeBtn() {
   }, []);
 
   if (!loaded) {
-    return <IconBtnLoader className="fixed right-4 top-4 w-8 h-8" />;
+    return <IconBtnLoader />;
   }
 
   return (
     <Button
       size={"icon"}
       variant={"outline"}
-      className="fixed right-4 top-4"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
       {theme === "dark" ? <Moon /> : <Sun />}
