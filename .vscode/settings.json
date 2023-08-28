@@ -1,0 +1,10 @@
+{
+    "workbench.startupEditor": "readme",
+    "security.workspace.trust.startupPrompt": "never",
+    "security.workspace.trust.banner": "never",
+    "security.workspace.trust.enabled": false,
+    "editor.fontLigatures": true,
+    "editor.fontFamily": "'Fira Code', Consolas, 'Courier New', monospace",
+    "workbench.colorTheme": "AMOLED",
+    "editor.fontSize": 18
+}

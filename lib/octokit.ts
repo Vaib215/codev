@@ -1,9 +1,8 @@
 import { getSession } from "next-auth/react";
 import { Octokit } from "octokit";
-const getData = () => {
-  return getSession().then(
-    (res) => new Octokit({ auth: res?.user.accessToken })
-  );
+const getOkClient = async () => {
+  const res = await getSession();
+  return new Octokit({ auth: res?.user?.accessToken });
 };
 
-export const octokit = getData();
+export const octokit = getOkClient();
