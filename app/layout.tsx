@@ -3,6 +3,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import NextAuthProvider from "@/lib/next-auth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,10 +19,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className + " min-h-screen flex flex-col"}>
+      <body className={inter.className + " min-h-screen flex flex-col overflow-hidden"}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <NavBar />
-          {children}
+          <NextAuthProvider>
+            <NavBar />
+            {children}
+          </NextAuthProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,6 +1,10 @@
 {
     "recommendations": [
         "ankitpati.vscodium-amoled",
-        "dsznajder.es7-react-js-snippets"
+        "dsznajder.es7-react-js-snippets",
+        "bradlc.vscode-tailwindcss",
+        "ms-vscode.vscode-typescript-next",
+        "esbenp.prettier-vscode",
+        "Prisma.prisma"
     ]
 }
