@@ -8,7 +8,7 @@ import NextAuthProvider from "@/lib/next-auth";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "codev",
+  title: "Home | codev",
   description: "Code runner for DSA geeks",
 };
 

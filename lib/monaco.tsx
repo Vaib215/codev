@@ -36,11 +36,6 @@ const MonacoEditor = ({
     editorRef,
     model
   ) => {
-    editorRef.current.setScrollTop(1);
-    editorRef.current.setPosition({
-      lineNumber: 2,
-      column: 0,
-    });
     editorRef.current.focus();
     monacoEditorRef.current.setModelMarkers(model[0], "owner", null);
   };
@@ -68,6 +63,14 @@ const MonacoEditor = ({
       theme={theme === "dark" ? "vs-dark" : "vs-light"}
       value={code}
       height={"90vh"}
+      options={{
+        fontSize: 14,
+        fontLigatures: true,
+        fontFamily: 'Fira Code',
+        wordWrap: 'on',
+        tabCompletion: 'on',
+        formatOnType: true
+      }}
     />
   );
 };

@@ -9,6 +9,12 @@ declare module "next-auth" {
       /** Oauth access token */
       accessToken?: accessToken;
       picture: string;
+      profile: {
+        login: string;
+        created_at: string;
+        updated_at: string;
+        bio: string;
+      }
     } & DefaultSession["user"];
   }
 }

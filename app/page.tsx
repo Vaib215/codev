@@ -1,18 +1,22 @@
+"use client";
+import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
+import Link from "next/link";
 const GistsList = dynamic(() => import("@/components/layouts/gist-list"), {
   ssr: false,
 });
-import { Button } from "@/components/ui/button";
-import { getSession } from "next-auth/react";
-import dynamic from "next/dynamic";
-import Link from "next/link";
-import { Suspense } from "react";
 
-export default async function Home() {
-  const data = await getSession();
+export default function Home() {
+  const { status } = useSession();
 
-  if (data?.user.name === "") {
+  if (status === "loading" || status === "unauthenticated") {
     return (
-      <main className="flex flex-col p-24 gap-4 flex-1 items-center justify-center">
+      <main
+        className={`flex flex-col p-24 gap-4 flex-1 items-center justify-center ${
+          status === "loading" ? "animate-ping" : ""
+        }`}
+      >
         <h1 className="text-8xl font-thin">codev</h1>
         <h3 className="text-2xl">for the ❣️ of code</h3>
         {status === "unauthenticated" && (
@@ -27,9 +31,7 @@ export default async function Home() {
   }
   return (
     <main className="flex-1 h-2/3 flex flex-col items-start px-4">
-      <Suspense fallback={<p>Loading...</p>}>
-        <GistsList />
-      </Suspense>
+      <GistsList />
     </main>
   );
 }

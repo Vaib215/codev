@@ -11,13 +11,16 @@ import {
 } from "@radix-ui/react-hover-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import dayjs from "dayjs";
+import IconBtnLoader from "../loaders/icon-button-loader";
 
 export default function NavBar() {
   const { status, data } = useSession();
   return (
     <nav className="flex justify-between p-4 sticky top-0 z-100 bg-background/50 backdrop-blur-sm">
-      <h1 className="text-2xl font-bold"><Link href={'/'}>codev</Link></h1>
-      <div className="flex gap-4">
+      <h1 className="text-2xl font-bold">
+        <Link href={"/"}>codev</Link>
+      </h1>
+      <div className="flex gap-4 items-center">
         {status === "authenticated" && (
           <>
             <HoverCard>
@@ -78,6 +81,13 @@ export default function NavBar() {
               <strong>Get Started</strong>
             </Button>
           </Link>
+        )}
+        {status === "loading" && (
+          <>
+            <IconBtnLoader className="w-16 h-6" />
+            <IconBtnLoader className="w-28 h-10" />
+            <IconBtnLoader className="w-10 h-10" />
+          </>
         )}
         <ThemeBtn />
       </div>

@@ -36,6 +36,7 @@ const authHandler = NextAuth({
       return token
     },
     session({ session, token }) {
+      // @ts-ignore
       session.user = token
       return session
     }

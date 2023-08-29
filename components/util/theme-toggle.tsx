@@ -15,7 +15,7 @@ export default function ThemeBtn() {
   }, []);
 
   if (!loaded) {
-    return <IconBtnLoader />;
+    return <IconBtnLoader className="w-10 aspect-square"/>;
   }
 
   return (
