@@ -6,5 +6,6 @@
     "editor.fontLigatures": true,
     "editor.fontFamily": "'Fira Code', Consolas, 'Courier New', monospace",
     "workbench.colorTheme": "AMOLED",
-    "editor.fontSize": 18
+    "editor.fontSize": 18,
+    "typescript.tsdk": "node_modules/typescript/lib"
 }

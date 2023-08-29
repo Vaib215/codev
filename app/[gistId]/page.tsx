@@ -25,8 +25,8 @@ export default async function GistViewPage({ params }: Props) {
       await octokit
     ).rest.gists.get({ gist_id: params.gistId });
     return (
-      <Tabs>
-        <TabsList>
+      <Tabs defaultValue="code">
+        <TabsList className="w-full grid grid-cols-3">
           <TabsTrigger value="code">Code</TabsTrigger>
           <TabsTrigger value="both">Both</TabsTrigger>
           <TabsTrigger value="output">Output</TabsTrigger>
