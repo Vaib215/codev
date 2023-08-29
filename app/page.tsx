@@ -1,14 +1,19 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { runCode } from "@/lib/glot";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useEffect } from "react";
 const GistsList = dynamic(() => import("@/components/layouts/gist-list"), {
   ssr: false,
 });
 
 export default function Home() {
   const { status } = useSession();
+  useEffect(() => {
+    runCode().then((res) => console.log(res));
+  }, []);
 
   if (status === "loading" || status === "unauthenticated") {
     return (

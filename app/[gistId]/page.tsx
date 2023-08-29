@@ -1,6 +1,14 @@
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { getLanguages, runCode } from "@/lib/glot";
 import MonacoEditor from "@/lib/monaco";
 import { octokit } from "@/lib/octokit";
 import { PlayIcon } from "lucide-react";
@@ -27,6 +35,7 @@ export default async function GistViewPage({ params }: Props) {
     const { data } = await (
       await octokit
     ).rest.gists.get({ gist_id: params.gistId });
+    const languages: string[] = await getLanguages();
     return (
       <Tabs defaultValue="both" className="flex h-screen flex-col relative">
         <TabsList className="w-fit max-w-sm mr-auto ml-4 grid grid-cols-3 space-x-2">
@@ -34,14 +43,36 @@ export default async function GistViewPage({ params }: Props) {
           <TabsTrigger value="both">Both</TabsTrigger>
           <TabsTrigger value="output">Output</TabsTrigger>
         </TabsList>
-        <Button
-          className="mx-auto flex gap-2 absolute right-4"
-          size={"sm"}
-          variant={"secondary"}
-        >
-          <strong>Run</strong>
-          <PlayIcon size={16} />
-        </Button>
+        <div className="mx-auto flex gap-2 absolute right-4">
+          <Select
+            defaultValue={
+              languages.find(
+                (lang) =>
+                  lang.toLocaleLowerCase() ===
+                  Object.values(data.files!)[0]?.language?.toLocaleLowerCase()
+              )
+                ? Object.values(data.files!)[0]?.language?.toLocaleLowerCase()
+                : Object.values(data.files!)[0]
+                    ?.filename?.split(".")
+                    .slice(-1)[0]
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Choose a Lang." />
+            </SelectTrigger>
+            <SelectContent className="h-72 overflow-y-auto">
+              {languages.map((lang) => (
+                <SelectItem className="p-2" value={lang}>
+                  {lang.slice(0, 1).toLocaleUpperCase() + lang.slice(1)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button size={"sm"} variant={"secondary"} className="space-x-2">
+            <strong>Run</strong>
+            <PlayIcon size={14} />
+          </Button>
+        </div>
         <TabsContent
           className="flex flex-wrap gap-1 p-4 data-[state=active]:z-50"
           value="code"
@@ -97,6 +128,7 @@ export default async function GistViewPage({ params }: Props) {
   } catch (e: any) {
     if (e.status === 401) {
       signOut();
-    } return <></>
+    }
+    return <></>;
   }
 }
