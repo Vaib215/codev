@@ -20,9 +20,11 @@ export type MonacoOnInitializePane = (
 const MonacoEditor = ({
   initialCode,
   language,
+  height,
 }: {
   initialCode?: string;
   language?: string;
+  height?: string;
 }): JSX.Element => {
   const { theme } = useTheme();
   const monacoEditorRef = useRef<any | null>(null);
@@ -51,27 +53,30 @@ const MonacoEditor = ({
   });
 
   return (
-    <Editor
-      language={language === "c++" ? "cpp" : language}
-      onChange={(value: any, _event: any) => {
-        setCode(value);
-      }}
-      onMount={(editor: any, monaco: { editor: any }) => {
-        monacoEditorRef.current = monaco.editor;
-        editorRef.current = editor;
-      }}
-      theme={theme === "dark" ? "vs-dark" : "vs-light"}
-      value={code}
-      height={"90vh"}
-      options={{
-        fontSize: 14,
-        fontLigatures: true,
-        fontFamily: 'Fira Code',
-        wordWrap: 'on',
-        tabCompletion: 'on',
-        formatOnType: true
-      }}
-    />
+      <Editor
+        language={language === "c++" ? "cpp" : language}
+        onChange={(value: any, _event: any) => {
+          setCode(value);
+        }}
+        onMount={(editor: any, monaco: { editor: any }) => {
+          monacoEditorRef.current = monaco.editor;
+          editorRef.current = editor;
+        }}
+        theme={theme === "dark" ? "vs-dark" : "vs-light"}
+        value={code}
+        height={height ?? "100%"}
+        options={{
+          fontSize: 14,
+          fontLigatures: true,
+          fontFamily: "Fira Code",
+          wordWrap: "on",
+          tabCompletion: "on",
+          formatOnType: true,
+          padding: {
+            top: 8,
+          },
+        }}
+      />
   );
 };
 
