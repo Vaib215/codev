@@ -60,8 +60,8 @@ export default function CreateCodevView({ languages }: Prop) {
             <SelectValue placeholder="Choose a Lang." />
           </SelectTrigger>
           <SelectContent className="h-72 overflow-y-auto">
-            {languages.map((item) => (
-              <SelectItem value={item.language}>
+            {languages.map((item, index) => (
+              <SelectItem key={index} value={item.language}>
                 {item.language.slice(0, 1).toLocaleUpperCase() +
                   item.language.slice(1)}
               </SelectItem>
