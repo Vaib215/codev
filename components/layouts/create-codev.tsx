@@ -3,7 +3,7 @@
 import MonacoEditor from "@/lib/monaco";
 import { Save } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
