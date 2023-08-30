@@ -5,4 +5,22 @@ const getOkClient = async () => {
   return new Octokit({ auth: res?.user?.accessToken });
 };
 
+export const createAndSaveGist = async (
+  filename: string,
+  language: string,
+  content: string
+) => {
+  const response = await (
+    await octokit
+  ).rest.gists.create({
+    public: true,
+    files: {
+      [filename + "." + language]: {
+        content,
+      },
+    },
+  });
+  return response.data.id;
+};
+
 export const octokit = getOkClient();

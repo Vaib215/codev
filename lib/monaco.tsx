@@ -1,7 +1,7 @@
 "use client";
 import Editor from "@monaco-editor/react";
 import { useTheme } from "next-themes";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useEffect, useRef } from "react";
 
 export type MonacoEditorOptions = {
   stopRenderingLineAfter: number;
@@ -18,27 +18,24 @@ export type MonacoOnInitializePane = (
 ) => void;
 
 const MonacoEditor = ({
-  initialCode,
   language,
   height,
+  code,
+  setCode,
 }: {
-  initialCode?: string;
   language?: string;
   height?: string;
+  code?: string;
+  setCode: (code: string) => void;
 }): JSX.Element => {
   const { theme } = useTheme();
   const monacoEditorRef = useRef<any | null>(null);
   const editorRef = useRef<any | null>(null);
-  const [code, setCode] = useState<string>(
-    initialCode ?? `// Start typing your code`
-  );
-
   const onInitializePane: MonacoOnInitializePane = (
     monacoEditorRef,
     editorRef,
     model
   ) => {
-    editorRef.current.focus();
     monacoEditorRef.current.setModelMarkers(model[0], "owner", null);
   };
 
@@ -53,30 +50,30 @@ const MonacoEditor = ({
   });
 
   return (
-      <Editor
-        language={language === "c++" ? "cpp" : language}
-        onChange={(value: any, _event: any) => {
-          setCode(value);
-        }}
-        onMount={(editor: any, monaco: { editor: any }) => {
-          monacoEditorRef.current = monaco.editor;
-          editorRef.current = editor;
-        }}
-        theme={theme === "dark" ? "vs-dark" : "vs-light"}
-        value={code}
-        height={height ?? "100%"}
-        options={{
-          fontSize: 14,
-          fontLigatures: true,
-          fontFamily: "Fira Code",
-          wordWrap: "on",
-          tabCompletion: "on",
-          formatOnType: true,
-          padding: {
-            top: 8,
-          },
-        }}
-      />
+    <Editor
+      language={language === "c++" ? "cpp" : language}
+      onChange={(value: any, _event: any) => {
+        setCode(value);
+      }}
+      onMount={(editor: any, monaco: { editor: any }) => {
+        monacoEditorRef.current = monaco.editor;
+        editorRef.current = editor;
+      }}
+      theme={theme === "dark" ? "vs-dark" : "vs-light"}
+      value={code}
+      height={height ?? "100%"}
+      options={{
+        fontSize: 14,
+        fontLigatures: true,
+        fontFamily: "Fira Code",
+        wordWrap: "on",
+        tabCompletion: "on",
+        formatOnType: true,
+        padding: {
+          top: 8,
+        },
+      }}
+    />
   );
 };
 
