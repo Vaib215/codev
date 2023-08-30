@@ -11,7 +11,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Code, CodeResponse, Lang, runCode } from "@/lib/code";
 import MonacoEditor from "@/lib/monaco";
-import { prisma } from "@/lib/prisma";
 import { components } from "@octokit/openapi-types";
 import { PlayIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -19,9 +18,19 @@ import { useEffect, useState } from "react";
 type Props = {
   data: components["schemas"]["gist-simple"];
   items: Lang[];
+  upsert: (input: string, output: string) => Promise<void>;
+  getCodev: () => Promise<{
+    input: string | null;
+    output: string | null;
+  } | null>;
 };
 
-export default function SingleGistView({ data, items }: Props) {
+export default function SingleGistView({
+  data,
+  items,
+  upsert,
+  getCodev,
+}: Props) {
   const [code, setCode] = useState<Code>({
     language: items.find(
       (item) =>
@@ -40,32 +49,11 @@ export default function SingleGistView({ data, items }: Props) {
     const result = await runCode(code);
     setCodeResponse(result);
     setLoading(false);
-    prisma.codev.upsert({
-      create: {
-        gistId: data.id!,
-        input: code.input,
-        output: result.output!,
-      },
-      update: {
-        input: code.input,
-        output: result.output!,
-      },
-      where: {
-        gistId: data.id!,
-      },
-    });
+    upsert(code.input ?? "", result.output ?? "");
   };
 
   const populateIO = async () => {
-    const codev = await prisma.codev.findUnique({
-      select: {
-        input: true,
-        output: true,
-      },
-      where: {
-        gistId: data.id,
-      },
-    });
+    const codev = await getCodev();
     setCode({ ...code, input: codev?.input ?? "" });
     setCodeResponse({
       output: codev?.output ?? "",
@@ -96,8 +84,8 @@ export default function SingleGistView({ data, items }: Props) {
             <SelectValue placeholder="Choose a Lang." />
           </SelectTrigger>
           <SelectContent className="h-72 overflow-y-auto">
-            {items.map((item, index) => (
-              <SelectItem key={index} value={item.language}>
+            {items.map((item) => (
+              <SelectItem value={item.language}>
                 {item.language.slice(0, 1).toLocaleUpperCase() +
                   item.language.slice(1)}
               </SelectItem>
