@@ -12,17 +12,17 @@ export const getLanguages = async (): Promise<Lang[]> => {
 
 export type Code = {
   code: string | undefined;
-  language: string | undefined;
+  language: string | undefined | null;
   input: string | undefined;
 };
 
 export type CodeResponse = {
-  timeStamp: number;
-  status: number;
-  output?: string;
+  timeStamp?: number | undefined;
+  status?: number;
+  output?: string | undefined;
   error?: string;
-  language: string;
-  info: string;
+  language?: string;
+  info?: string;
 };
 
 export const runCode = async ({

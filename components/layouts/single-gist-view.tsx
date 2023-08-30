@@ -11,9 +11,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Code, CodeResponse, Lang, runCode } from "@/lib/code";
 import MonacoEditor from "@/lib/monaco";
+import { prisma } from "@/lib/prisma";
 import { components } from "@octokit/openapi-types";
 import { PlayIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   data: components["schemas"]["gist-simple"];
@@ -32,14 +33,48 @@ export default function SingleGistView({ data, items }: Props) {
     code: Object.values(data.files!).at(0)?.content,
     input: "",
   });
-  const [codeResponse, setCodeResponse] = useState<CodeResponse | null>(null);
+  const [codeResponse, setCodeResponse] = useState<CodeResponse>();
   const [loading, setLoading] = useState(false);
   const executeCode = async () => {
     setLoading(true);
     const result = await runCode(code);
     setCodeResponse(result);
     setLoading(false);
+    prisma.codev.upsert({
+      create: {
+        gistId: data.id!,
+        input: code.input,
+        output: result.output!,
+      },
+      update: {
+        input: code.input,
+        output: result.output!,
+      },
+      where: {
+        gistId: data.id!,
+      },
+    });
   };
+
+  const populateIO = async () => {
+    const codev = await prisma.codev.findUnique({
+      select: {
+        input: true,
+        output: true,
+      },
+      where: {
+        gistId: data.id,
+      },
+    });
+    setCode({ ...code, input: codev?.input ?? "" });
+    setCodeResponse({
+      output: codev?.output ?? "",
+    });
+  };
+
+  useEffect(() => {
+    populateIO();
+  }, []);
   return (
     <Tabs defaultValue="both" className="flex h-screen flex-col relative">
       <TabsList className="w-fit max-w-sm mr-auto ml-4 grid grid-cols-3 space-x-2">
@@ -49,7 +84,7 @@ export default function SingleGistView({ data, items }: Props) {
       </TabsList>
       <div className="mx-auto flex gap-2 absolute right-4">
         <Select
-          value={code?.language}
+          value={code?.language ?? undefined}
           onValueChange={(val) =>
             setCode({
               ...code,
