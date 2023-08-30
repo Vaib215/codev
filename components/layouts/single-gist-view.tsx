@@ -62,7 +62,7 @@ export default function SingleGistView({
 
   useEffect(() => {
     populateIO();
-  }, []);
+  }, [data.id]);
   return (
     <Tabs defaultValue="both" className="flex h-screen flex-col relative">
       <TabsList className="w-fit max-w-sm mr-auto ml-4 grid grid-cols-3 space-x-2">
@@ -84,8 +84,8 @@ export default function SingleGistView({
             <SelectValue placeholder="Choose a Lang." />
           </SelectTrigger>
           <SelectContent className="h-72 overflow-y-auto">
-            {items.map((item) => (
-              <SelectItem value={item.language}>
+            {items.map((item, index) => (
+              <SelectItem key={index} value={item.language}>
                 {item.language.slice(0, 1).toLocaleUpperCase() +
                   item.language.slice(1)}
               </SelectItem>
