@@ -5,7 +5,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,8 +18,12 @@ import { useEffect, useState } from "react";
 type Props = {
   data: components["schemas"]["gist-simple"];
   items: Lang[];
-  upsert: (input: string, output: string) => Promise<void>;
-  getCodev: () => Promise<{
+  upsert: (
+    input: string,
+    output: string,
+    data: components["schemas"]["gist-simple"]
+  ) => Promise<void>;
+  getCodev: (data: components["schemas"]["gist-simple"]) => Promise<{
     input: string | null;
     output: string | null;
   } | null>;
@@ -49,11 +53,11 @@ export default function SingleGistView({
     const result = await runCode(code);
     setCodeResponse(result);
     setLoading(false);
-    upsert(code.input ?? "", result.output ?? "");
+    upsert(code.input ?? "", result.output ?? "", data);
   };
 
   const populateIO = async () => {
-    const codev = await getCodev();
+    const codev = await getCodev(data);
     setCode({ ...code, input: codev?.input ?? "" });
     setCodeResponse({
       output: codev?.output ?? "",
@@ -63,6 +67,7 @@ export default function SingleGistView({
   useEffect(() => {
     populateIO();
   }, [data.id]);
+
   return (
     <Tabs defaultValue="both" className="flex h-screen flex-col relative">
       <TabsList className="w-fit max-w-sm mr-auto ml-4 grid grid-cols-3 space-x-2">

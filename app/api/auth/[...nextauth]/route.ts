@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
@@ -29,17 +29,17 @@ const authHandler = NextAuth({
   callbacks: {
     jwt({ token, account, profile }) {
       if (account) {
-        token.id = account.id
-        token.accessToken = account.access_token
-        token.profile = profile
+        token.id = account.id;
+        token.accessToken = account.access_token;
+        token.profile = profile;
       }
-      return token
+      return token;
     },
     session({ session, token }) {
       // @ts-ignore
-      session.user = token
-      return session
-    }
+      session.user = token;
+      return session;
+    },
   },
 });
 
